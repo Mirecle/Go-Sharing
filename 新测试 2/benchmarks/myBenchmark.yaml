@@ -1,0 +1,31 @@
+test:
+    name: basic-contract-benchmark
+    description: test benchmark
+    workers:
+      type: local
+      number: 10
+    rounds:
+      - label: invoke
+        description: upload 
+        txNumber: 10
+        rateControl: 
+          type: fixed-rate
+          opts:
+            tps: 10
+        workload:
+          module: workload/delete.js
+          arguments:
+            assets: 10
+            contractId: asn
+
+
+monitors:
+  resource:
+  - module: docker
+    options:
+      interval: 5 
+      containers:
+      - all
+  
+
+
