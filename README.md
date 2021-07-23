@@ -209,9 +209,9 @@ Note that picture2 here should be a variation of picture1.
 
 We use HyperLedger caliper for performance assessment.
 
-https://hyperledger.github.io/caliper/v0.4.2/installing-caliper/#using-the-docker-image
+![caliper_upload](src/caliper_upload.png)![caliper_visit](src/caliper_visit.png)![caliper_forward](src/caliper_forward.png)![caliper_delete](src/caliper_delete.png)
 
 The configuration files we use in this project are as follows：
 
-链接
+https://hyperledger.github.io/caliper/v0.4.2/installing-caliper/#using-the-docker-image
 
