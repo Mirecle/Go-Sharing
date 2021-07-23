@@ -4,12 +4,6 @@
 
 **Code Author:**
 
-**[Updates]**
-
-- 
-
-### Demo
-
 ### Results
 
 ![result](src/result.png)
@@ -68,17 +62,17 @@ In this section, we specify the algorithm for implementing the Go-sharing functi
 
 3. Visit/Download Photo
 
-   1. Require: Function name VishtPhoto, Photo visiter v2, Social Network Platform SNP2 for v2, Photo owner OA,Photo visiter v2, Social Network Platform SNP1 for v1,Ownership of picture A 
+   Require: Function name VishtPhoto, Photo visiter v2, Social Network Platform SNP2 for v2, Photo owner OA,Photo visiter v2, Social Network Platform SNP1 for v1,Ownership of picture A 
 
-      ```bash
-      peer chaincode invoke -n mycc -c '{"Args":["VisitPhoto","v2","SNP2","OA","OSN1","OwnershipPA"]}' -C myc
-      ```
+   ```bash
+   peer chaincode invoke -n mycc -c '{"Args":["VisitPhoto","v2","SNP2","OA","OSN1","OwnershipPA"]}' -C myc
+   ```
 
-      Require: Function name DownloadPhoto, Photo visiter v2, Social Network Platform SNP2 for v2, Photo owner OA,Photo visiter v2, Social Network Platform SNP1 for v1,Ownership of picture A 
+   Require: Function name DownloadPhoto, Photo visiter v2, Social Network Platform SNP2 for v2, Photo owner OA,Photo visiter v2, Social Network Platform SNP1 for v1,Ownership of picture A 
 
-      ```bash
-      peer chaincode invoke -n mycc -c '{"Args":["DownloadPhoto","OA","SNP1","OA","OSN1","OwnershipPA"]}' -C myc
-      ```
+   ```bash
+   peer chaincode invoke -n mycc -c '{"Args":["DownloadPhoto","OA","SNP1","OA","OSN1","OwnershipPA"]}' -C myc
+   ```
 
    
 
@@ -209,7 +203,21 @@ Note that picture2 here should be a variation of picture1.
 
 We use HyperLedger caliper for performance assessment.
 
-![caliper_upload](src/caliper_upload.png)![caliper_visit](src/caliper_visit.png)![caliper_forward](src/caliper_forward.png)![caliper_delete](src/caliper_delete.png)
+ [upload.html](Performance Assessment/result/upload.html) 
+
+![caliper_upload](src/caliper_upload.png)
+
+ [visit.html](Performance Assessment/result/visit.html) 
+
+![caliper_visit](src/caliper_visit.png)
+
+ [forward.html](Performance Assessment/result/forward.html) 
+
+![caliper_forward](src/caliper_forward.png)
+
+ [delete.html](Performance Assessment/result/delete.html) 
+
+![caliper_delete](src/caliper_delete.png)
 
 The configuration files we use in this project are as follows：
 
