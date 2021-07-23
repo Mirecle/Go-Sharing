@@ -1,0 +1,45 @@
+test:
+    name: basic-contract-benchmark
+    description: test benchmark
+    workers:
+      type: local
+      number: 5
+    rounds:
+      - label: invoke
+        description: 123
+        txDuration: 10
+        rateControl: 
+          type: fixed-load
+          opts:
+            transactionLoad: 50
+        workload:
+          module: workload/upload.js
+          arguments:
+            assets: 10
+            contractId: asn
+monitors:
+  resource:
+  - module: prometheus
+    options:
+      interval: 5
+      url: "http://localhost:9090"
+      metrics: 
+        include: [dev.*,couch,peer,orderer]
+        queries:
+          - name: Endorse Time (s)
+            query: rate(endorser_propal_duration_sum{chaincode="asn:v0"}[1m])/rate(endorser_propal_duration_count{chaincode="asn:v0"}[1m])
+            step: 1
+            statistic: avg
+          - name: Max Memory(MB)
+            query: sum(container_memory_rss{name=~".+"}) by (name)
+            step: 10
+            label: name
+            statistic: max
+            mutiplier: 0.000001
+    charting:
+      bar:
+        metrics: [Max Memory (MB)]
+      polar:
+        metrics: [all]    
+
+

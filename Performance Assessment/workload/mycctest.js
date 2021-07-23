@@ -6,47 +6,42 @@ class MyWorkload extends WorkloadModuleBase {
     constructor() {
         super();
     }
-
-
+    
+   
     async initializeWorkloadModule(workerIndex, totalWorkers, roundIndex, roundArguments, sutAdapter, sutContext) {
+        await super.initializeWorkloadModule(workerIndex, totalWorkers, roundIndex, roundArguments, sutAdapter, sutContext);
 
-       await super.initializeWorkloadModule(workerIndex, totalWorkers, roundIndex, roundArguments, sutAdapter, sutContext);
-	this.workerIndex = workerIndex;
+        this.workerIndex = workerIndex;
         this.totalWorkers = totalWorkers;
         this.roundIndex = roundIndex;
         this.roundArguments = roundArguments;
         this.sutAdapter = sutAdapter;
         this.sutContext = sutContext;
-
     }
-
+    
     async submitTransaction() {
-
-
-        const hash = new Date().getTime().toString();
-	   const padding= this.workerIndex.toString();
-	   const random=Math.floor(Math.random()*this.roundArguments.assets);
-        console.log(`Worker ${this.workerIndex}:sutAdapter"`+hash+padding+random);
+	 
+     	  console.log(`Worker ${this.workerIndex}`);
         const myArgs = {
-            contractId: 'asn1',
-            contractFunction: 'DeletePhoto',
-            invokerIdentity: 'Admin@org2.example.com',
-            contractArguments: ['OA','OSN1',hash+padding+random],
+            contractId: 'mycc2',
+            contractFunction: 'invoke',
+            invokerIdentity: 'Admin@org1.example.com',
+            contractArguments: ['a','b','20'],
             readOnly: false
         };
-
         await this.sutAdapter.sendRequests(myArgs);
-
+	 
+        
     }
-
+    
     async cleanupWorkloadModule() {
-
+       
     }
+    
 
+    
 
-
-
-
+  
 }
 
 

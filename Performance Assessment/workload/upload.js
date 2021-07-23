@@ -22,9 +22,9 @@ class MyWorkload extends WorkloadModuleBase {
     async submitTransaction() {
         console.log(`Worker ${this.workerIndex}:`);
         const myArgs = {
-            contractId: 'asn',
+            contractId: 'asn1',
             contractFunction: 'UploadPhoto',
-            invokerIdentity: 'Admin@org1.example.com',
+            invokerIdentity: 'Admin@org2.example.com',
             contractArguments: ['OA','OSN1','PointerPA','PoliterPolivy','HashPA'],
             readOnly: true
         };

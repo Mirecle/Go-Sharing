@@ -11,7 +11,9 @@ class MyWorkload extends WorkloadModuleBase {
     async initializeWorkloadModule(workerIndex, totalWorkers, roundIndex, roundArguments, sutAdapter, sutContext) {
 
      
-	this.workerIndex = workerIndex;
+	 await super.initializeWorkloadModule(workerIndex, totalWorkers, roundIndex, roundArguments, sutAdapter, sutContext);
+
+        this.workerIndex = workerIndex;
         this.totalWorkers = totalWorkers;
         this.roundIndex = roundIndex;
         this.roundArguments = roundArguments;
@@ -23,9 +25,9 @@ class MyWorkload extends WorkloadModuleBase {
         
 	console.log(`Hash of picture:${this.workerIndex}`)
 	const request = {
-		contractId: 'asn',
+		contractId: 'asn1',
         	contractFunction: 'UploadPhoto',
-            	invokerIdentity: 'Admin@org1.example.com',
+            	invokerIdentity: 'Admin@org2.example.com',
             	contractArguments: ['OA','OSN1','PointerPA','PointerPolivyP',this.workerIndex],
             	readOnly: false
 	};	

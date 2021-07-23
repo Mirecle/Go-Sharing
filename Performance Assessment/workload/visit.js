@@ -24,11 +24,11 @@ class MyWorkload extends WorkloadModuleBase {
 	   const padding= this.workerIndex.toString();
         console.log(`Worker ${this.workerIndex}:sutAdapter"`+hash+padding);
         const myArgs = {
-            contractId: 'asn',
+            contractId: 'asn1',
             contractFunction: 'VisitPhoto',
-            invokerIdentity: 'Admin@org1.example.com',
-            contractArguments: ['v2','OSN2','OA','OSN1',hash+padding],
-            readOnly: false
+            invokerIdentity: 'Admin@org2.example.com',
+            contractArguments: ['v9','OSN2','OA','OSN1',hash+padding],
+            readOnly: true
         };
 
         await this.sutAdapter.sendRequests(myArgs);

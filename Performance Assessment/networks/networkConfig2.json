@@ -1,0 +1,79 @@
+{
+    "version" : "1.0",
+    "name": "Caliper test",
+    "caliper" : {
+        "blockchain": "fabric"
+    },
+    "clients": {
+        "Admin@org1.example.com": {
+            "client": {
+                "credentialStore": {
+                    "path": "/tmp/org1",
+                    "cryptoStore": {
+                        "path": "/tmp/org1"
+                    }
+                },
+                "organization": "Org1",
+                "clientPrivateKey": {
+                    "path": "/usr/local/src/hyperleger/fabric/fabric/scripts/fabric-samples/raft-3node-swarm/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/priv_sk"
+                },
+                "clientSignedCert": {
+                    "path": "/usr/local/src/hyperleger/fabric/fabric/scripts/fabric-samples/raft-3node-swarm/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem"
+                },
+                "connection": {
+                    "timeout": {
+                        "peer": {
+                            "endorser": "300"
+                        }
+                    }
+                }
+
+            }
+        }
+       
+        
+    },
+    "channels": {
+        "mychannel": {
+            "created" : true,
+            "contracts": [
+                {
+                    "id":"asn",
+                    "version":"1.0.0"
+                }
+            ]
+        }
+    },
+    "organizations":{
+        "Org1": {
+            "mspid": "Org1MSP",
+            "peers": [
+                "peer0.org1.example.com",
+                "peer1.org1.example.com"
+            ]
+        }
+   
+    },
+    "peers": {
+        "peer0.org1.example.com": {
+            "url": "grpcs://localhost:7051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICVzCCAf2gAwIBAgIQApFcC5JUdO7doiRDrcGnwDAKBggqhkjOPQQDAjB2MQsw\nCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy\nYW5jaXNjbzEZMBcGA1UEChMQb3JnMS5leGFtcGxlLmNvbTEfMB0GA1UEAxMWdGxz\nY2Eub3JnMS5leGFtcGxlLmNvbTAeFw0yMTAxMTEwMTU1MDBaFw0zMTAxMDkwMTU1\nMDBaMHYxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQH\nEw1TYW4gRnJhbmNpc2NvMRkwFwYDVQQKExBvcmcxLmV4YW1wbGUuY29tMR8wHQYD\nVQQDExZ0bHNjYS5vcmcxLmV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0D\nAQcDQgAEnegNBBeqQny/h/QxHL2Vs77ADkb9p7otkbclXEn7zxmC94IjUoUDygji\nqCyBMvS852F0JLI5hRf1Pzfv8j2mb6NtMGswDgYDVR0PAQH/BAQDAgGmMB0GA1Ud\nJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkGA1Ud\nDgQiBCDR+DDqV1GF89nfwLdaX6sphNvS2eRYPyZRkAONbEt/ZzAKBggqhkjOPQQD\nAgNIADBFAiEAuX34aYnWsBYThkpW2V7BDg2gK2VeYh9ULS03aBuvFhICIGrSFJu8\nUQWmC7x0RbxzFPDJuePj6PoZvpF47h5bsJDI\n-----END CERTIFICATE-----\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.org1.example.com",
+                "hostnameOverride": "peer0.org1.example.com"
+            }
+        },
+        "peer1.org1.example.com": {
+            "url": "grpcs://localhost:8051",
+            "tlsCACerts": {
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICVzCCAf2gAwIBAgIQApFcC5JUdO7doiRDrcGnwDAKBggqhkjOPQQDAjB2MQsw\nCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNU2FuIEZy\nYW5jaXNjbzEZMBcGA1UEChMQb3JnMS5leGFtcGxlLmNvbTEfMB0GA1UEAxMWdGxz\nY2Eub3JnMS5leGFtcGxlLmNvbTAeFw0yMTAxMTEwMTU1MDBaFw0zMTAxMDkwMTU1\nMDBaMHYxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQH\nEw1TYW4gRnJhbmNpc2NvMRkwFwYDVQQKExBvcmcxLmV4YW1wbGUuY29tMR8wHQYD\nVQQDExZ0bHNjYS5vcmcxLmV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0D\nAQcDQgAEnegNBBeqQny/h/QxHL2Vs77ADkb9p7otkbclXEn7zxmC94IjUoUDygji\nqCyBMvS852F0JLI5hRf1Pzfv8j2mb6NtMGswDgYDVR0PAQH/BAQDAgGmMB0GA1Ud\nJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDATAPBgNVHRMBAf8EBTADAQH/MCkGA1Ud\nDgQiBCDR+DDqV1GF89nfwLdaX6sphNvS2eRYPyZRkAONbEt/ZzAKBggqhkjOPQQD\nAgNIADBFAiEAuX34aYnWsBYThkpW2V7BDg2gK2VeYh9ULS03aBuvFhICIGrSFJu8\nUQWmC7x0RbxzFPDJuePj6PoZvpF47h5bsJDI\n-----END CERTIFICATE-----\n\n"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer1.org1.example.com",
+                "hostnameOverride": "peer1.org1.example.com"
+            }
+        }
+   }
+}

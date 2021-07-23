@@ -6,15 +6,20 @@ test:
       number: 20
     rounds:
       - label: invoke
-        description: forward
+        description: upload
         txNumber: 5000
         rateControl: 
-          type: fixed-feedback-rate
+          type: record-rate
           opts:
-            tps: 800
-            transactionLoad: 200
+            rateController:
+              type: fixed-rate
+              opts: 
+                tps: 1000
+            pathTemplate: ../tx_records_client_upload
+            outputFormat: TEXT
+            logEnd: true
         workload:
-          module: workload/forward2.js
+          module: workload/delete.js
           arguments:
             assets: 10
             contractId: asn1
