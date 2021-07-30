@@ -16,16 +16,23 @@ Posting daily photos on online social network plat- forms (SNPs) has become a tr
 
 ## Platform
 
-- HyperLedger Fabric 2.0
-- HyperLedger Caliper0.4
+- HyperLedger Fabric 
+- Hyperledger Caliper
 - Docker
 - CentOS
 - Ubuntu
 
-```
-//链码 环境
+``` 
+//chaincode
+docker-ce                                    19.04
+docker-compose                               19.03.13
+nodejs                                       10.20.0
+npm                                          6.14.4
+HyperLedger Fabric                           2.0
+Hyperledger Caliper                          0.4
+CentOS                                       7.9.2
 
-//Ownership 环境
+//Ownership 
 python                                       3.6.9
 opencv-python                                4.1.2.20
 numpy                                        1.18.2
@@ -49,6 +56,94 @@ We will go through the details in the following sections.
 ### 1. Smart Contract
 
 In this section, we specify the algorithm for implementing the Go-sharing function in a blockchain-based cross-social network privacy image sharing framework, which consists of four main parts: image upload, image access or download, image forwarding or secondary upload, and image deletion.
+
+#### Start Network
+
+##### Generate cryptography files
+
+```bash
+../bin/cryptogen generate --config=./crypto-config.yaml
+export FABRIC_CFG_PATH=$PWD
+mkdir channel-artifacts
+../bin/configtxgen -profile SampleMultiNodeEtcdRaft -outputBlock ./channel-
+artifacts/genesis.block -channelID byfn-sys-channel
+../bin/configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-
+artifacts/channel.tx -channelID mychannel
+../bin/configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate
+./channel-artifacts/Org1MSPanchors.tx -channelID mychannel -asOrg Org1MSP
+../bin/configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate
+./channel-artifacts/Org2MSPanchors.tx -channelID mychannel -asOrg Org2MSP
+../bin/configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate
+./channel-artifacts/Org3MSPanchors.tx -channelID mychannel -asOrg Org3MSP
+```
+
+##### Create a Genesis Block
+
+```bash
+docker exec cli peer channel create -o orderer.example.com:7050 -c mychannel
+\
+       -f ./channel-artifacts/channel.tx --tls true \
+--cafile
+/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizatio
+ns/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com
+-cert.pem
+```
+
+##### Add each peer to the channel
+
+```bash
+docker exec -it cli bash
+ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/orderer Organizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca. example.com-cert.pem
+peer channel create -o orderer.example.com:7050 -c mychannel -f ./channel- artifacts/channel.tx --tls true --cafile $ORDERER_CA
+mv mychannel.block channel-artifacts/
+peer channel join -b channel-artifacts/mychannel.block
+source scripts/utils.sh
+setGlobals 1 1
+peer channel join -b channel-artifacts/mychannel.block
+```
+
+##### Install and package the chain code
+
+```bash
+peer lifecycle chaincode package asn.tar.gz --path
+/opt/gopath/src/github.com/chaincode/ASN/ --lang golang --label asn_1
+peer lifecycle chaincode install asn.tar.gz
+go mod vendor
+peer lifecycle chaincode queryinstalled
+peer lifecycle chaincode approveformyorg --tls true \
+ --cafile
+/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizatio
+ns/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com
+-cert.pem \
+ --channelID mychannel --name asn --version 1 --init-required --package-id
+asn_1:ecc7f631316aca386589cf57cb4b1c312981cea9bce29a11cd4b6297703daf02 --
+sequence 1 --waitForEvent
+peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name
+asn  --version 1 --sequence 1 --output json --init-required
+source /scripts/utils.sh
+setGlobals 0 2
+peer lifecycle chaincode commit -o orderer.example.com:7050 \
+ --tls true --cafile
+/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizatio
+ns/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com
+-cert.pem \
+ --channelID mychannel --name asn --peerAddresses
+peer0.org1.example.com:7051 \
+ --tlsRootCertFiles
+/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/
+org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
+ --peerAddresses peer0.org2.example.com:7051 --tlsRootCertFiles
+/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/
+org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
+ --peerAddresses peer0.org3.example.com:7051 --tlsRootCertFiles
+/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/
+org3.example.com/peers/peer0.org3.example.com/tls/ca.crt \
+ --version 1 --sequence 1 --init-required
+```
+
+
+
+#### Execution of commands 
 
 1. We use development mode for testing
 
@@ -203,7 +298,7 @@ Note that picture2 here should be a variation of picture1.
 
 We use HyperLedger caliper for performance assessment.
 
- [upload.html](https://github.com/Mirecle/Go-Sharing/blob/main/Performance%20Assessment/result/upload.html) 
+ [upload.html](https://github.com/Mirecle/Go-Sharing/blob/main/Performance%20Assessment/result/upload.html) （You can download the html file and open it locally with your browser）
 
 ![caliper_upload](src/caliper_upload.png)
 
