@@ -23,7 +23,7 @@ Posting daily photos on online social network plat- forms (SNPs) has become a tr
 - Ubuntu
 
 ``` 
-//chaincode
+//Smart Contract
 docker-ce                                    19.04
 docker-compose                               19.03.13
 nodejs                                       10.20.0
