@@ -193,20 +193,20 @@ org3.example.com/peers/peer0.org3.example.com/tls/ca.crt \
 
 
 ### 2. Ownership Protection 
-
+（插入图片）
 There are three different section of this part.
+0. 介绍使用的数据集 COCO2017 训练集多少张 测试集多少张
+1. 介绍encoder
+2. 介绍decoder
+3. Adversary Discriminator
+4. random noise black box
 
-1. Ownership Injection
-2. Ownership Extraction
-3. Photo Resizing and Compressing
-4. Accuracy Comparison
-
-#### 1. Ownership Injection
+#### 1. Train encoder
 
 If you want test or do Ownership injection in a separate device or platform. Just download the file Ownership Protection.zip from the link:(这里把那个压缩包的github下载地址放进来)
 Make sure the length of ownership sequence is 128 bits. 
 
-##### Run ownership.py
+##### Run main.py
 
 ```
 # Injection
@@ -217,8 +217,7 @@ cd Ownership_Protection
 python ownership.py original_photo_address inject ownership_sequence processed_photo_address
 ```
 
-#### 2. Ownership Extraction
-
+#### 2. Train Decoder 
 ```
 # Extraction
 # For processed photo, use the following command:
@@ -228,12 +227,12 @@ cd Ownership_Protection
 python ownership.py processed_photo_address extract
 
 ```
-
+main_decoder.py
 #### 3. Photo Resizing and Compressing
 
 When you need to resize an image or test the compression resistance of our algorithm, you can use compress.py to transform images of any size and dimensions. 
-
-##### Run compress.py
+测试训练模型
+##### test_model.py
 
 ```
 cd Ownership_Protection
@@ -249,7 +248,7 @@ python compress.py resize Oimage_address outfile_address H W
 #For the photos to be Compressed to XX kb, use the following command:
 python compress.py resize Oimage_address outfile_address XX quality
 ```
-
+随机噪声黑盒 random black box 修改Noise.py
 #### 4. Accuracy Comparison
 
 Here, we give a detailed robustness test sample for ownership sequence extraction of images after various attacks including pretzel noise, Gaussian noise, rotation attack and tampering attack, and compare the extraction results in the form of one percentage with Whash similarity.
@@ -264,7 +263,7 @@ python Comparison.py picture1.address picture2.address
 
 Note that picture2 here should be a variation of picture1.
 
-#### demos:
+#### result:
 
 | Origin Image                    | Size          | Ownership Sequence |
 | ------------------------------- | ------------- | ------------------ |
