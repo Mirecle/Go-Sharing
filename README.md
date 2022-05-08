@@ -245,7 +245,7 @@ you can edit Noise.py
 
 #### result:
 
-![result](src/result.png)
+![result](src/result2.png)
 
 ### 3. Performance Assessment
 
