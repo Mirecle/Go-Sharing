@@ -16,7 +16,7 @@ With the evolution of social media, posting daily photos on online Social Networ
 
 ## Platform
 
-- HyperLedger Fabric 
+- HyperLedger Fabric
 - Hyperledger Caliper
 - Docker
 - CentOS
@@ -32,7 +32,7 @@ HyperLedger Fabric                           2.0
 Hyperledger Caliper                          0.4
 CentOS                                       7.9.2
 
-//Ownership 
+//Ownership
 python                                       3.6.9
 opencv-python                                4.1.2.20
 numpy                                        1.18.2
@@ -41,14 +41,12 @@ PyWavelets                                   1.1.1
 ImageHash                                    4.2.0
 ```
 
-
-
 ## Codes
 
 There are three different section of this project.
 
 1. Smart Contract
-2. Ownership Protection 
+2. Ownership Protection
 3. Performance Assessment
 
 We will go through the details in the following sections.
@@ -141,60 +139,48 @@ org3.example.com/peers/peer0.org3.example.com/tls/ca.crt \
  --version 1 --sequence 1 --init-required
 ```
 
-
-
-#### Execution of commands 
+#### Execution of commands
 
 1. We use development mode for testing
-
 2. Upload Photo
 
-   Require: Function name UploadPhoto, Photo owner OA, Social Network Platform SNP1, pointer of PA Pointer(PA), privacy policy , Ownership value of PA Ov(PA) ,Ownership of picture A 
+   Require: Function name UploadPhoto, Photo owner OA, Social Network Platform SNP1, pointer of PA Pointer(PA), privacy policy , Ownership value of PA Ov(PA) ,Ownership of picture A
 
    ```bash
    peer chaincode invoke -n mycc -c '{"Args":["UploadPhoto","OA","SNP1","PointerPA","v1-v2-v3-v4-v5*v1-v2-v3-v4*v1-v2-v3*v1-v2","OwnershipPA"]}' -C myc
    ```
-
 3. Visit/Download Photo
 
-   Require: Function name VishtPhoto, Photo visiter v2, Social Network Platform SNP2 for v2, Photo owner OA,Photo visiter v2, Social Network Platform SNP1 for v1,Ownership of picture A 
+   Require: Function name VishtPhoto, Photo visiter v2, Social Network Platform SNP2 for v2, Photo owner OA,Photo visiter v2, Social Network Platform SNP1 for v1,Ownership of picture A
 
    ```bash
    peer chaincode invoke -n mycc -c '{"Args":["VisitPhoto","v2","SNP2","OA","OSN1","OwnershipPA"]}' -C myc
    ```
 
-   Require: Function name DownloadPhoto, Photo visiter v2, Social Network Platform SNP2 for v2, Photo owner OA,Photo visiter v2, Social Network Platform SNP1 for v1,Ownership of picture A 
+   Require: Function name DownloadPhoto, Photo visiter v2, Social Network Platform SNP2 for v2, Photo owner OA,Photo visiter v2, Social Network Platform SNP1 for v1,Ownership of picture A
 
    ```bash
    peer chaincode invoke -n mycc -c '{"Args":["DownloadPhoto","OA","SNP1","OA","OSN1","OwnershipPA"]}' -C myc
    ```
-
-   
-
 4. Forword/Reupload Photo
 
-   Require: Function name Forword/ReuploadPhoto, Photo visitor v2, Social Network Platform SNP3 for v2 , Privacy policy policy of v2 , Photo owner OA, Social Network Platform SNP1 for OA , Ownership of picture A 
+   Require: Function name Forword/ReuploadPhoto, Photo visitor v2, Social Network Platform SNP3 for v2 , Privacy policy policy of v2 , Photo owner OA, Social Network Platform SNP1 for OA , Ownership of picture A
 
    ```bash
    peer chaincode invoke -n mycc -c '{"Args":["ForwordPhoto","v2","SNP3","v1-v2-v3-v4-v5
    *v1-v2-v3-v4*v1-v2-v3*v1","OA","SNP1","OwnershipPA"]}' -C myc
    ```
-
 5. Delete Photo
 
-   Require: Function name DeletePhoto ,Photo owner OA, Social Network Platform SNP1, Ownership of picture A 
+   Require: Function name DeletePhoto ,Photo owner OA, Social Network Platform SNP1, Ownership of picture A
 
    ```bash
    peer chaincode invoke -n mycc -c '{"Args":["DeletePhoto","OA","SNP1","OwnershipPA"]}' -C myc
    ```
 
+### 2. Ownership Protection
 
-
-
-
-### 2. Ownership Protection 
 ![Ownership5](src/Ownership5.png)
-
 
 #### 0. Data set
 
@@ -203,14 +189,16 @@ To implement the proposed ownership identification scheme, We use 100,000 and 10
 #### 1. Train encoder
 
 **Encoder**. The encoder is trained to mask the first up- loaded origin photo with a given ownership sequence as a watermark. In the encoder, the ownership sequence is first duplicate concatenated to expanded into a 3-dimension tesnor −1, 1L∗H ∗Wand concatenated to the encoder ’s intermediary representation. Since the watermarking based on a convolutional neural network uses the different levels of feature information of the convoluted image to learn the unvisual watermarking injection, this 3-dimension tenor is repeatedly used to concatenate to every layer in the encoder and generate a new tensor ∈ R(C+L)∗H∗W for the next layer. After multiple convolutional layers, the encode produces the encoded image Ien. To ensure the availability of the encoded image, the encoder should training to minimize the distance between Iop and Ien:
+
 $$
 LE =MSE(Iop,Ien)=MSE(Iop,E(Iop,Oin))
 $$
+
 and the probability to be detected an encoded image by the adversarial discriminator A:
+
 $$
 LG = log (1 − A(Ien))
 $$
-
 
 ##### Run main.py
 
@@ -219,9 +207,10 @@ cd Ownership_Protection
 python main.py
 ```
 
-#### 2. Train Decoder 
+#### 2. Train Decoder
 
 **Decoder**. The decoder consists of several convolutional layers, a global spatial average pooling layer, and a single linear layer, where convolutional layers are used to produce L feature channels while the average pooling converts them into the vector of the ownership sequence’s size. Finally, the single linear layer produces the recovered ownership sequence Oout. It should be noted that the distribution of the recovered sequence indicates whether the image is encoded. If the Oout ∈ {0, 1}L rather than {−1, 1}L , we say that this image is in its first uploading. To ensure the availability of the recovered ownership sequence, the decoder should training to minimize the distance between Oin and Oout:
+
 $$
 LD = MSE(Oin, Oout) = MSE(Oin, D(Oin))
 $$
@@ -230,13 +219,14 @@ $$
 cd Ownership_Protection
 python main_for_decode.py
 ```
+
 #### 3. Adversary Discriminator
 
 **Adversary Discriminator**. The adversary discriminator has a similar structure to the decoder and outputs a binary classification. Acting as a critical role in the adversarial network, the adversary attempts to classify Ien from Iop cor- rectly to prompt the encoder to improve the visual quality of Ien until it is indistinguishable from Iop. The adversary should training to minimize the following:
+
 $$
 LA = log (1 − A(Iop)) + log (A(E(Iop)))
 $$
-
 
 ##### test_model.py
 
@@ -244,16 +234,18 @@ $$
 cd Ownership_Protection
 python test_model.py
 ```
+
 随机噪声黑盒 random black box 修改Noise.py
+
 #### 4. Random noise black box
 
 **Random noise black box**. In blind watermarking, recent  works are often trained with fixed types of noise and parameters [39], [40]. Such models only work well for identical noise attacks while performing poorly against unpredictable random noise combinations attacks. Unfortunately, in cross-SNPs sharing, photos are often subject to more than one type of unknown noise attack. Hence, to improve robustness, we design a random noise black box to simulate the unpre- dictable modifications during photo dissemination. Given an Ien as input, the random noise black box selects 0∼3 types of processing as black-box noise attacks from Resize, Gaussian noise, Brightness&Contrast, Crop, and Padding to output the noised image Ino. Note that in addition to the type and the amount of noise, the intensity and parameters of the noise are also randomized to ensure the model we trained can handle any combination of noise attacks.
 
-you can edit Noise.py 
+you can edit Noise.py
 
 #### result:
 
-![result 2](src/result 2.png)
+![result](src/result.png)
 
 ### 3. Performance Assessment
 
@@ -263,19 +255,18 @@ We use HyperLedger caliper for performance assessment.
 
 ![caliper_upload](src/caliper_upload.png)
 
- [visit.html](https://github.com/Mirecle/Go-Sharing/blob/main/Performance%20Assessment/result/visit.html) 
+ [visit.html](https://github.com/Mirecle/Go-Sharing/blob/main/Performance%20Assessment/result/visit.html)
 
 ![caliper_visit](src/caliper_visit.png)
 
- [forward.html](https://github.com/Mirecle/Go-Sharing/blob/main/Performance%20Assessment/result/forward.html) 
+ [forward.html](https://github.com/Mirecle/Go-Sharing/blob/main/Performance%20Assessment/result/forward.html)
 
 ![caliper_forward](src/caliper_forward.png)
 
- [delete.html](https://github.com/Mirecle/Go-Sharing/blob/main/Performance%20Assessment/result/delete.html) 
+ [delete.html](https://github.com/Mirecle/Go-Sharing/blob/main/Performance%20Assessment/result/delete.html)
 
 ![caliper_delete](src/caliper_delete.png)
 
 The configuration files we use in this project are as follows：
 
 https://hyperledger.github.io/caliper/v0.4.2/installing-caliper/#using-the-docker-image
-
