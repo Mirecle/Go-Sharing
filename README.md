@@ -12,7 +12,7 @@
 
 ## Abstract
 
-Posting daily photos on online social network plat- forms (SNPs) has become a trend. Most SNPs adopt various security mechanisms to protect users’ privacy. Nevertheless, users’ privacy lacks adequate protection in cross-SNP sharing because most existing security mechanisms are only effective internally. These mechanisms are also vulnerable to tampering attacks from malicious uploaders. In addition, since the user’s privacy is completely dependent on the centralized server, a single point of failure will cause an irreparable privacy leakage problem. As a response, we propose a blockchain-based photo sharing framework called Go-sharing to protect users’ privacy under the multi-platform scenario. We develop a series of smart contract-based protocols to ensure secure photo sharing across different SNPs. To preserve the privacy of all owners in various SNPs, we hold a dissemination chain for every photo to record its entire spreading process and calculate a suitable policy for each propagation. Furthermore, a robust algorithm for ownership protection is also designed to resist tampering attacks, which binds each uploaded picture with its owner’s identity unbreakably. Our real-world dataset experiments on hyperledger Fabric 2.0 demonstrate that our proposed scheme is feasible and capable of resisting tampering attacks up to 40% of the tampered area.
+With the evolution of social media, posting daily photos on online Social Network Platforms (SNPs) has become a trend. As a kind of sensitive privacy, online photos are often protected carefully by various security mechanisms. However, these mechanisms will lose effectiveness when someone spreads photos to other platforms. In this paper, we propose Go-sharing, a blockchain-based privacy-preserving framework that provides powerful dissemination control for cross-SNPs photo sharing. In contrast to existing security mechanisms that run separately in centralized servers which hardly create trust between each other, our framework achieves consistent consensus on photo dissemination control through carefully designed smart contract-based protocols. By utilizing these protocols, we create platform-free dissemination trees for every sharing image, providing users with complete sharing control and privacy protection. Considering the possible privacy conflicts between photo owners and subsequent re-posters in cross-SNPs sharing, we design a dynamic privacy policy generation algorithm to maximize the flexibility of subsequent re-posters without violating formers’ privacy. Moreover, Go-sharing also provides robust photo ownership identification mechanisms to avoid illegal reprinting and theft of photos. It introduces a random noise black box in two-stage separable deep learning (TSDL) to improve the robustness against unpredictable manipulations. The proposed framework is evaluated through extensive real-world simulations. The results show the capability and effectiveness of Go-Sharing based on a variety of performance metrics.
 
 ## Platform
 
@@ -193,105 +193,67 @@ org3.example.com/peers/peer0.org3.example.com/tls/ca.crt \
 
 
 ### 2. Ownership Protection 
-（插入图片）
-There are three different section of this part.
-0. 介绍使用的数据集 COCO2017 训练集多少张 测试集多少张
-1. 介绍encoder
-2. 介绍decoder
-3. Adversary Discriminator
-4. random noise black box
+![Ownership5](src/Ownership5.png)
+
+
+#### 0. Data set
+
+To implement the proposed ownership identification scheme, We use 100,000 and 1000 images from the COCO data set for model training and testing, respectively.
 
 #### 1. Train encoder
 
-If you want test or do Ownership injection in a separate device or platform. Just download the file Ownership Protection.zip from the link:(这里把那个压缩包的github下载地址放进来)
-Make sure the length of ownership sequence is 128 bits. 
+**Encoder**. The encoder is trained to mask the first up- loaded origin photo with a given ownership sequence as a watermark. In the encoder, the ownership sequence is first duplicate concatenated to expanded into a 3-dimension tesnor −1, 1L∗H ∗Wand concatenated to the encoder ’s intermediary representation. Since the watermarking based on a convolutional neural network uses the different levels of feature information of the convoluted image to learn the unvisual watermarking injection, this 3-dimension tenor is repeatedly used to concatenate to every layer in the encoder and generate a new tensor ∈ R(C+L)∗H∗W for the next layer. After multiple convolutional layers, the encode produces the encoded image Ien. To ensure the availability of the encoded image, the encoder should training to minimize the distance between Iop and Ien:
+$$
+LE =MSE(Iop,Ien)=MSE(Iop,E(Iop,Oin))
+$$
+and the probability to be detected an encoded image by the adversarial discriminator A:
+$$
+LG = log (1 − A(Ien))
+$$
+
 
 ##### Run main.py
 
-```
-# Injection
-# For original photo and corresponding sequence of ownership protection, use the following command:
-
+```bash
 cd Ownership_Protection
-
-python ownership.py original_photo_address inject ownership_sequence processed_photo_address
+python main.py
 ```
 
 #### 2. Train Decoder 
-```
-# Extraction
-# For processed photo, use the following command:
 
+**Decoder**. The decoder consists of several convolutional layers, a global spatial average pooling layer, and a single linear layer, where convolutional layers are used to produce L feature channels while the average pooling converts them into the vector of the ownership sequence’s size. Finally, the single linear layer produces the recovered ownership sequence Oout. It should be noted that the distribution of the recovered sequence indicates whether the image is encoded. If the Oout ∈ {0, 1}L rather than {−1, 1}L , we say that this image is in its first uploading. To ensure the availability of the recovered ownership sequence, the decoder should training to minimize the distance between Oin and Oout:
+$$
+LD = MSE(Oin, Oout) = MSE(Oin, D(Oin))
+$$
+
+```bash
 cd Ownership_Protection
-
-python ownership.py processed_photo_address extract
-
+python main_for_decode.py
 ```
-main_decoder.py
-#### 3. Photo Resizing and Compressing
+#### 3. Adversary Discriminator
 
-When you need to resize an image or test the compression resistance of our algorithm, you can use compress.py to transform images of any size and dimensions. 
-测试训练模型
+**Adversary Discriminator**. The adversary discriminator has a similar structure to the decoder and outputs a binary classification. Acting as a critical role in the adversarial network, the adversary attempts to classify Ien from Iop cor- rectly to prompt the encoder to improve the visual quality of Ien until it is indistinguishable from Iop. The adversary should training to minimize the following:
+$$
+LA = log (1 − A(Iop)) + log (A(E(Iop)))
+$$
+
+
 ##### test_model.py
 
-```
+```bash
 cd Ownership_Protection
-# Check photo's size
-# For the photos to be checked, use the following command:
-python compress.py checksize Oimage_address
-
-# Resize photo
-#For the photos to be resized as (H,W), use the following command:
-python compress.py resize Oimage_address outfile_address H W
-
-#Compress photo
-#For the photos to be Compressed to XX kb, use the following command:
-python compress.py resize Oimage_address outfile_address XX quality
+python test_model.py
 ```
 随机噪声黑盒 random black box 修改Noise.py
-#### 4. Accuracy Comparison
+#### 4. Random noise black box
 
-Here, we give a detailed robustness test sample for ownership sequence extraction of images after various attacks including pretzel noise, Gaussian noise, rotation attack and tampering attack, and compare the extraction results in the form of one percentage with Whash similarity.
+**Random noise black box**. In blind watermarking, recent  works are often trained with fixed types of noise and parameters [39], [40]. Such models only work well for identical noise attacks while performing poorly against unpredictable random noise combinations attacks. Unfortunately, in cross-SNPs sharing, photos are often subject to more than one type of unknown noise attack. Hence, to improve robustness, we design a random noise black box to simulate the unpre- dictable modifications during photo dissemination. Given an Ien as input, the random noise black box selects 0∼3 types of processing as black-box noise attacks from Resize, Gaussian noise, Brightness&Contrast, Crop, and Padding to output the noised image Ino. Note that in addition to the type and the amount of noise, the intensity and parameters of the noise are also randomized to ensure the model we trained can handle any combination of noise attacks.
 
-##### Run Comparison.py
-
-```
-cd Ownership_Protection
-#compare the similarity of ownership sequence with Whash:
-python Comparison.py picture1.address picture2.address
-```
-
-Note that picture2 here should be a variation of picture1.
+you can edit Noise.py 
 
 #### result:
 
-| Origin Image                    | Size          | Ownership Sequence |
-| ------------------------------- | ------------- | ------------------ |
-| ![origin_image](src/origin.jpg) | <center>750MB | <center>None       |
-
-| Injected Image                    | Size          | Ownership Sequence                        |
-| --------------------------------- | ------------- | ----------------------------------------- |
-| ![injected_image](src/insert.jpg) | <center>750KB | <center>aacc3c2a5c1a01474 48e7ed53b88aacc |
-
-| Compressed Image                      | Size          | Ownership Sequence                        |
-| ------------------------------------- | ------------- | ----------------------------------------- |
-| ![compressed_image](src/compress.jpg) | <center>350KB | <center>aacc3c2a5c1a01474 48e7ed53b88aacc |
-
-| Salt&Papper Noise                | Ownership Sequence                        | Accuracy        |
-| -------------------------------- | ----------------------------------------- | --------------- |
-| ![compressed_image](src/S&P.png) | <center>aacc3c2a5c1a01474 48e7ed53b88aacc | <center>100.00% |
-
-| Gaussian Noise                        | Ownership Sequence                        | Accuracy       |
-| ------------------------------------- | ----------------------------------------- | -------------- |
-| ![compressed_image](src/gaussian.png) | <center>aacc3c2a5c1a01474 48e7ed53b08aacc | <center>99.22% |
-
-| Spin Attack                           | Ownership Sequence                        | Accuracy        |
-| ------------------------------------- | ----------------------------------------- | --------------- |
-| ![compressed_image](src/旋转攻击.png) | <center>aacc3c2a5c1a01474 48e7ed53b88aacc | <center>100.00% |
-
-| Tampering Attack                    | Ownership Sequence                        | Accuracy        |
-| ----------------------------------- | ----------------------------------------- | --------------- |
-| ![compressed_image](src/tamper.jpg) | <center>aacc3c2a5c1a01474 48e7ed53b88aacc | <center>100.00% |
+![result 2](src/result 2.png)
 
 ### 3. Performance Assessment
 
