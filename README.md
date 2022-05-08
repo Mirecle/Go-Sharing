@@ -235,8 +235,6 @@ cd Ownership_Protection
 python test_model.py
 ```
 
-随机噪声黑盒 random black box 修改Noise.py
-
 #### 4. Random noise black box
 
 **Random noise black box**. In blind watermarking, recent  works are often trained with fixed types of noise and parameters [39], [40]. Such models only work well for identical noise attacks while performing poorly against unpredictable random noise combinations attacks. Unfortunately, in cross-SNPs sharing, photos are often subject to more than one type of unknown noise attack. Hence, to improve robustness, we design a random noise black box to simulate the unpre- dictable modifications during photo dissemination. Given an Ien as input, the random noise black box selects 0∼3 types of processing as black-box noise attacks from Resize, Gaussian noise, Brightness&Contrast, Crop, and Padding to output the noised image Ino. Note that in addition to the type and the amount of noise, the intensity and parameters of the noise are also randomized to ensure the model we trained can handle any combination of noise attacks.
