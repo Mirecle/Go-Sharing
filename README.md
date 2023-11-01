@@ -2,7 +2,7 @@
 
 **Go-Sharing: A Blockchain-based Privacy-Preserving Framework for Cross-Social Network Photo Sharing**
 
-**Code Author: Ming Zhang Chunhao Zheng Yuhang Xie**
+**Code Author:**
 
 ### Results
 
