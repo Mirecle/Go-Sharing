@@ -141,9 +141,7 @@ def main():
 
     # bitwise_avg_err = np.sum(np.abs(decoded_rounded - message.detach().cpu().numpy()))/(image_tensor.shape[0] * messages.shape[1])
 
-#python test_model.py -o ".\experiments\no-noise adam-eps-1e-4\options-and-config.pickle" -c ".\experiments\no-noise adam-eps-1e-4\checkpoints\no-noise--epoch-200.pyt" -s ..\..\mechine_learning\HiDDeN-master\data\train2017\000000000009.jpg
-#python test_model.py -o ".\runs\fixencoder 2022.01.03--00-22-05\options-and-config.pickle" -c ".\runs\fixencoder 2022.01.03--00-22-05\checkpoints\fixencoder--epoch-2.pyt" -s ..\..\mechine_learning\HiDDeN-master\data\train2017\000000000009.jpg
-#python test_model.py -o ".\runs\decode_test 2022.01.17--21-41-04\options-and-config.pickle" -c ".\runs\decode_test 2022.01.17--21-41-04\checkpoints\decode_test--epoch-458.pyt" -s ..\HiDDeN-master\data\train\train_class\000000000009.jpg
+
 
 if __name__ == '__main__':
     main()
